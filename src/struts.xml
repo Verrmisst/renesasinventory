@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+   <package name="default" namespace="/" extends="json-default">
+		
+		<!-- 【注意】
+			fileUpload拦截器应设置在defaultStack之前
+		 -->
+		<action name="upload"
+		        class="cn.net.inlink.action.UploadAction" >
+		    <interceptor-ref name="fileUpload">
+			   <!-- ie:image/pjpeg -->
+			   <param name="allowedTypes">
+			        <!-- image/bmp,image/png,
+			   		image/gif,image/jpeg -->
+			   		 application/excel, 
+			   		     application/vnd.ms-excel
+			   </param>
+			   <!-- 文件大小限制是800k(字节数) -->
+			   <param name="maximumSize">1024000</param>
+		     </interceptor-ref>
+		     <interceptor-ref name="defaultStack" />
+		     
+		     <param name="savePath">upload</param>
+		     
+		     <result name="input">/WEB-INF/upload.jsp</result>
+		     <result name="success">/WEB-INF/show.jsp</result>
+		     <result name="error">/WEB-INF/error.jsp</result>
+		     <result name = "errorMessage">/WEB-INF/error.jsp</result>
+		</action>
+		
+		<action name="export" class="cn.net.inlink.action.ExportExcelAction" method="export">
+		   <result name="export" type="chain">download</result>
+		</action>
+		
+		<action name="startexport" class="cn.net.inlink.action.StartExportAction" >
+		   <result name="startexport">/WEB-INF/export.jsp</result>
+		</action>
+		
+		<action name="startupload" class="cn.net.inlink.action.StartUploadAction">
+		   <result name="startupload">/WEB-INF/upload.jsp</result>
+		</action>
+		
+		<action name="download" class="cn.net.inlink.action.DownloadAction">
+            <result name="download" type="stream">
+                 <!-- 下载文件类型定义 -->
+                 <param name="contentType">application/octet-stream </param>
+                 <!-- 下载文件输出流定义 -->
+                 <param name="inputName">inputStream</param>　　　　　　　　　　　　　　　　　　
+                 <!-- 下载文件处理方式 --> 　　　　　　　　　　　　　　　　
+                 <param name="contentDisposition">attachment;fileName="${flag}.zip"</param>
+                 <!-- 下载文件的缓冲大小 -->
+                 <param name="bufferSize">4096</param>
+            </result>
+        </action>
+        
+       
+		
+	</package> 
+	
+	
+	<!-- <package name="mypackage" namespace="/" extends="json-default">
+		<action name="download" class="action.DownloadAction">
+            <result name="download" type="stream">
+                 下载文件类型定义
+                 <param name="contentType">application/octet-stream;charset=ISO8859-1</param>
+                 下载文件输出流定义
+                 <param name="inputName">inputStream</param>　　　　　　　　　　　　　　　　　　
+                 下载文件处理方式 　　　　　　　　　　　　　　　　
+                 <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                 下载文件的缓冲大小
+                 <param name="bufferSize">4096</param>
+            </result>
+        </action>
+    </package> -->
+</struts>    
